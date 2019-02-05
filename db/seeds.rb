@@ -1,4 +1,6 @@
-require 'faker'
+
+   require 'faker'
+
 
 City.destroy_all
 
