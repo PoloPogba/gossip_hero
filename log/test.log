@@ -1,0 +1,506 @@
+  [1m[35m (111.5ms)[0m  [1m[35mDROP DATABASE IF EXISTS "the-gossip-project_test"[0m
+  [1m[35m (267.0ms)[0m  [1m[35mCREATE DATABASE "the-gossip-project_test" ENCODING = 'unicode'[0m
+  [1m[35mSQL (0.7ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (0.6ms)[0m  [1m[35mDROP TABLE IF EXISTS "cities" CASCADE[0m
+  [1m[35m (15.5ms)[0m  [1m[35mCREATE TABLE "cities" ("id" bigserial primary key, "name" character varying, "zip_code" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (0.5ms)[0m  [1m[35mDROP TABLE IF EXISTS "comments" CASCADE[0m
+  [1m[35m (9.5ms)[0m  [1m[35mCREATE TABLE "comments" ("id" bigserial primary key, "content" text, "user_id" bigint, "gossip_id" bigint, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (3.7ms)[0m  [1m[35mCREATE  INDEX  "index_comments_on_gossip_id" ON "comments"  ("gossip_id")[0m
+  [1m[35m (3.7ms)[0m  [1m[35mCREATE  INDEX  "index_comments_on_user_id" ON "comments"  ("user_id")[0m
+  [1m[35m (0.5ms)[0m  [1m[35mDROP TABLE IF EXISTS "first_name_tables" CASCADE[0m
+  [1m[35m (9.6ms)[0m  [1m[35mCREATE TABLE "first_name_tables" ("id" bigserial primary key, "first_name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE IF EXISTS "gossips" CASCADE[0m
+  [1m[35m (9.0ms)[0m  [1m[35mCREATE TABLE "gossips" ("id" bigserial primary key, "title" character varying, "content" text, "user_id" bigint, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (4.1ms)[0m  [1m[35mCREATE  INDEX  "index_gossips_on_user_id" ON "gossips"  ("user_id")[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE IF EXISTS "likes" CASCADE[0m
+  [1m[35m (5.5ms)[0m  [1m[35mCREATE TABLE "likes" ("id" bigserial primary key, "user_id" bigint, "gossip_id" bigint, "comment_id" bigint, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (3.5ms)[0m  [1m[35mCREATE  INDEX  "index_likes_on_comment_id" ON "likes"  ("comment_id")[0m
+  [1m[35m (3.4ms)[0m  [1m[35mCREATE  INDEX  "index_likes_on_gossip_id" ON "likes"  ("gossip_id")[0m
+  [1m[35m (3.5ms)[0m  [1m[35mCREATE  INDEX  "index_likes_on_user_id" ON "likes"  ("user_id")[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE IF EXISTS "privatemessages" CASCADE[0m
+  [1m[35m (8.6ms)[0m  [1m[35mCREATE TABLE "privatemessages" ("id" bigserial primary key, "content" text, "recipient_id" bigint, "sender_id" bigint, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (3.8ms)[0m  [1m[35mCREATE  INDEX  "index_privatemessages_on_recipient_id" ON "privatemessages"  ("recipient_id")[0m
+  [1m[35m (3.5ms)[0m  [1m[35mCREATE  INDEX  "index_privatemessages_on_sender_id" ON "privatemessages"  ("sender_id")[0m
+  [1m[35m (0.3ms)[0m  [1m[35mDROP TABLE IF EXISTS "taggossips" CASCADE[0m
+  [1m[35m (6.1ms)[0m  [1m[35mCREATE TABLE "taggossips" ("id" bigserial primary key, "tag_id" bigint, "gossip_id" bigint, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (3.6ms)[0m  [1m[35mCREATE  INDEX  "index_taggossips_on_gossip_id" ON "taggossips"  ("gossip_id")[0m
+  [1m[35m (3.5ms)[0m  [1m[35mCREATE  INDEX  "index_taggossips_on_tag_id" ON "taggossips"  ("tag_id")[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE IF EXISTS "tags" CASCADE[0m
+  [1m[35m (8.6ms)[0m  [1m[35mCREATE TABLE "tags" ("id" bigserial primary key, "title" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE IF EXISTS "users" CASCADE[0m
+  [1m[35m (8.7ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "first_name" character varying, "last_name" character varying, "description" text, "email" character varying, "age" integer, "city_id" bigint, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (3.7ms)[0m  [1m[35mCREATE  INDEX  "index_users_on_city_id" ON "users"  ("city_id")[0m
+  [1m[35m (7.6ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (1.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (1.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20190204160115)[0m
+  [1m[35m (1.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20190131191312),
+(20190131172125),
+(20190131172100),
+(20190131172135),
+(20190131171844),
+(20190131172013),
+(20190131171956),
+(20190131172037);
+
+[0m
+  [1m[35m (8.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.8ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.9ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", "2019-02-04 23:48:00.774354"], ["updated_at", "2019-02-04 23:48:00.774354"]]
+  [1m[35m (1.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.5ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Toyport"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:28.947692"], ["updated_at", "2019-02-04 23:53:28.947692"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Turcottebury"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:28.952619"], ["updated_at", "2019-02-04 23:53:28.952619"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "West Eladiaton"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:28.957094"], ["updated_at", "2019-02-04 23:53:28.957094"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Marvinland"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:28.974492"], ["updated_at", "2019-02-04 23:53:28.974492"]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Ildamouth"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:28.982597"], ["updated_at", "2019-02-04 23:53:28.982597"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Rohanport"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.007776"], ["updated_at", "2019-02-04 23:53:29.007776"]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.5ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Reyes"], ["last_name", "Stracke"], ["description", "Voluptates aut quam. Accusantium consequatur animi. Sit eum maxime. Dolorem quia et. Amet est totam. Praesentium voluptatem minus. Esse quia sit. Modi culpa vel. Odio ea assumenda. Cupiditate suscipit voluptatem. Esse ad repellendus. Temporibus in nostrum. Quae a eum. Maiores et quis. Amet doloremque incidunt. Illo nihil natus. Sequi mollitia qui. Ut ipsam recusandae. Et ullam ex. Et facilis assumenda. Et blanditiis et. Voluptatem at similique. Esse aut aliquid. Reprehenderit voluptatem laboriosam. Nesciunt fugit eos."], ["email", "americaanderson@beerwolf.net"], ["age", 25], ["city_id", 6], ["created_at", "2019-02-04 23:53:29.011817"], ["updated_at", "2019-02-04 23:53:29.011817"]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.4ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "South Missfurt"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.024008"], ["updated_at", "2019-02-04 23:53:29.024008"]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.3ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "John"], ["last_name", "Ortiz"], ["description", "Vel tenetur inventore. Culpa molestiae occaecati. Mollitia aut quia. Eos eos qui. Accusantium cumque modi. Aperiam exercitationem deserunt. Cupiditate nemo qui. Enim esse et. Inventore vel deleniti. Placeat pariatur ipsum. Fuga nemo eligendi. Culpa doloribus ut. Molestiae et rerum. Voluptatibus odit quasi. Est quas id. At repudiandae illo. Unde nihil rerum. Ut placeat reiciendis. Nostrum praesentium ducimus. Sint consequatur molestias. Et et atque. Minus est rem. Ipsa quis nihil. Doloremque saepe eos. Aspernatur atque sunt."], ["email", "lauren@pouros.co"], ["age", 25], ["city_id", 7], ["created_at", "2019-02-04 23:53:29.026267"], ["updated_at", "2019-02-04 23:53:29.026267"]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mGossip Create (0.4ms)[0m  [1m[32mINSERT INTO "gossips" ("title", "content", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["title", "Heart Equinox"], ["content", "His wallet is woven out of chupacabra leather"], ["user_id", 2], ["created_at", "2019-02-04 23:53:29.028571"], ["updated_at", "2019-02-04 23:53:29.028571"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mComment Create (0.4ms)[0m  [1m[32mINSERT INTO "comments" ("content", "user_id", "gossip_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "He once got pulled over for speeding, and the cop got the ticket"], ["user_id", 1], ["gossip_id", 1], ["created_at", "2019-02-04 23:53:29.030646"], ["updated_at", "2019-02-04 23:53:29.030646"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "West Isaac"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.034498"], ["updated_at", "2019-02-04 23:53:29.034498"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Mike"], ["last_name", "Kuphal"], ["description", "Architecto eligendi ut. Sunt autem eum. Laborum soluta neque. Repellendus nam ut. Aut deserunt aut. Incidunt ut excepturi. Reiciendis rerum molestiae. Occaecati repellat nostrum. Rerum placeat perspiciatis. Nihil repellendus ut. Est dolor rerum. Qui explicabo ea. Et voluptate unde. Illum omnis quia. Autem architecto ipsam. Dignissimos molestiae nihil. Ut optio laborum. Excepturi quidem omnis. Perspiciatis perferendis eaque. Consequatur rem consequatur. Tenetur libero cupiditate. Et nihil at. Quia sint soluta. Quis cumque odio. Architecto saepe animi."], ["email", "dario@ankunding.name"], ["age", 25], ["city_id", 8], ["created_at", "2019-02-04 23:53:29.036036"], ["updated_at", "2019-02-04 23:53:29.036036"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Wizahaven"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.039722"], ["updated_at", "2019-02-04 23:53:29.039722"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Amos"], ["last_name", "Fritsch"], ["description", "Mollitia qui labore. Est itaque ut. Eligendi inventore molestias. Voluptas et commodi. Placeat tempore qui. Autem eligendi quia. Est asperiores sunt. Officia rerum consectetur. Atque asperiores sit. Ipsum quasi doloribus. Saepe minus expedita. Aut molestiae libero. Architecto nihil cumque. Dolores et minus. Magni voluptatibus quia. Ex a aut. Aut sed veritatis. Iure ex numquam. Ipsa quia commodi. Consequuntur eos voluptatem. Delectus et voluptates. Odio in reprehenderit. Quia neque beatae. Ut nesciunt beatae. Id dolor et."], ["email", "iolathompson@prosacco.co"], ["age", 25], ["city_id", 9], ["created_at", "2019-02-04 23:53:29.041077"], ["updated_at", "2019-02-04 23:53:29.041077"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mGossip Create (0.2ms)[0m  [1m[32mINSERT INTO "gossips" ("title", "content", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["title", "Cascara Star"], ["content", "Bigfoot tries to get pictures of him"], ["user_id", 4], ["created_at", "2019-02-04 23:53:29.042620"], ["updated_at", "2019-02-04 23:53:29.042620"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Port Houston"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.049582"], ["updated_at", "2019-02-04 23:53:29.049582"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Woodrow"], ["last_name", "Mosciski"], ["description", "Aliquam aperiam praesentium. Et velit molestiae. Voluptatem quia corrupti. Aut autem doloremque. Possimus minima omnis. Tenetur vitae quae. Quia iusto ad. Et ea adipisci. Earum velit necessitatibus. Non dolores excepturi. Deserunt veniam et. Quibusdam ratione atque. Ut nihil qui. Vitae nihil sed. Quaerat occaecati incidunt. Eaque ea reiciendis. Nulla et corporis. Omnis magnam reprehenderit. Sit qui unde. Omnis sint sunt. Quo deleniti velit. Laudantium accusantium est. Asperiores quaerat eum. Commodi alias eveniet. Voluptas et rerum."], ["email", "katheygleichner@brakuscronin.info"], ["age", 25], ["city_id", 10], ["created_at", "2019-02-04 23:53:29.050908"], ["updated_at", "2019-02-04 23:53:29.050908"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Kesslerside"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.054252"], ["updated_at", "2019-02-04 23:53:29.054252"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Taylor"], ["last_name", "Nikolaus"], ["description", "Aut dicta nesciunt. Dolores sequi cumque. Veniam et ut. Qui quia quasi. Qui corrupti tempore. Quidem totam quo. Non modi velit. Dicta facilis culpa. Autem quod quae. Illo quaerat id. Rerum reiciendis minus. Accusamus eum minima. Voluptas ut vel. Et illum occaecati. In numquam eos. Est magni eum. Laborum illum saepe. Et debitis expedita. Nemo assumenda sit. Fuga sapiente reiciendis. Eaque officiis est. Placeat commodi consequatur. Voluptas eos voluptas. Rerum eaque fugit. Ipsam laborum vero."], ["email", "stefaniesipes@hartmann.co"], ["age", 25], ["city_id", 11], ["created_at", "2019-02-04 23:53:29.055646"], ["updated_at", "2019-02-04 23:53:29.055646"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mGossip Create (0.2ms)[0m  [1m[32mINSERT INTO "gossips" ("title", "content", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["title", "Heart Look"], ["content", "His shirts never wrinkle"], ["user_id", 6], ["created_at", "2019-02-04 23:53:29.057113"], ["updated_at", "2019-02-04 23:53:29.057113"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mComment Create (0.2ms)[0m  [1m[32mINSERT INTO "comments" ("content", "user_id", "gossip_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "When in Rome, they do as HE does"], ["user_id", 5], ["gossip_id", 3], ["created_at", "2019-02-04 23:53:29.058529"], ["updated_at", "2019-02-04 23:53:29.058529"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Romaguerashire"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.064947"], ["updated_at", "2019-02-04 23:53:29.064947"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Leif"], ["last_name", "Adams"], ["description", "Voluptas suscipit error. Repudiandae id qui. Voluptas et recusandae. Error neque unde. Facere ad expedita. Dicta tempore non. Iste nemo sapiente. Consequatur sequi quam. Vero ducimus vel. Veniam quisquam sed. Amet sequi nulla. Maxime in mollitia. Voluptate ad sequi. Aut iure debitis. Qui magnam qui. Aut omnis voluptatum. Et natus nihil. Laboriosam cupiditate nemo. Nisi similique sed. Voluptate minus aliquid. Dolorem occaecati culpa. Recusandae enim quod. Sit rerum earum. In ut esse. Sit similique excepturi."], ["email", "gabriella@baumbach.net"], ["age", 25], ["city_id", 12], ["created_at", "2019-02-04 23:53:29.066282"], ["updated_at", "2019-02-04 23:53:29.066282"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Lake Kattie"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.069535"], ["updated_at", "2019-02-04 23:53:29.069535"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Jacinto"], ["last_name", "Schmeler"], ["description", "Aut sint laudantium. Voluptas aut corporis. Eveniet accusantium ullam. Cumque voluptatibus explicabo. Nemo dolores est. Omnis accusamus et. Debitis consectetur consequatur. Quis impedit aperiam. Dolor consequatur ullam. Ea enim ad. Aut dolorem consequatur. Quia omnis sapiente. Aliquid fugiat placeat. Necessitatibus quo et. Nulla fuga aut. Voluptatem amet quasi. Est voluptas reiciendis. Dignissimos ipsa tempora. Quaerat ratione vel. Voluptatum quas in. Facere dolorem quo. Rerum et quia. Quo laborum omnis. Quos voluptas dolore. Velit labore dolore."], ["email", "allenemmerich@ondrickatrantow.biz"], ["age", 25], ["city_id", 13], ["created_at", "2019-02-04 23:53:29.070745"], ["updated_at", "2019-02-04 23:53:29.070745"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mGossip Create (0.2ms)[0m  [1m[32mINSERT INTO "gossips" ("title", "content", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["title", "Major Coffee"], ["content", "If he were to visit the dark side of the moon, it wouldn’t be dark"], ["user_id", 8], ["created_at", "2019-02-04 23:53:29.072179"], ["updated_at", "2019-02-04 23:53:29.072179"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mComment Create (0.2ms)[0m  [1m[32mINSERT INTO "comments" ("content", "user_id", "gossip_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "He gave his father “the talk”"], ["user_id", 7], ["gossip_id", 4], ["created_at", "2019-02-04 23:53:29.073559"], ["updated_at", "2019-02-04 23:53:29.073559"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Howeside"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.081172"], ["updated_at", "2019-02-04 23:53:29.081172"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Maryam"], ["last_name", "Bailey"], ["description", "Quas facilis dolores. Non cum autem. Aspernatur a laborum. Ab unde aut. Dolorem eos cum. Consectetur quos quisquam. Asperiores fugit ea. Esse omnis quibusdam. Explicabo voluptates eius. Ex id culpa. Quod qui sit. Sunt ut unde. Dolore unde iusto. Exercitationem sunt labore. Nulla autem sed. Sequi deserunt iste. Labore dolor qui. Et et nemo. Ut quo qui. Nostrum corporis quis. Maiores neque rerum. Laudantium eum autem. Sapiente cum aut. Officia saepe incidunt. Itaque voluptatum consectetur."], ["email", "claud@lang.name"], ["age", 25], ["city_id", 14], ["created_at", "2019-02-04 23:53:29.082554"], ["updated_at", "2019-02-04 23:53:29.082554"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Wiegandmouth"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.085849"], ["updated_at", "2019-02-04 23:53:29.085849"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Spencer"], ["last_name", "Mayer"], ["description", "Similique voluptates dolore. Laudantium et aut. Doloremque eos sit. Et minima ducimus. Sapiente ullam voluptates. Ut et minima. Quis sit quae. Quia hic at. Adipisci et cum. Exercitationem quam officia. Officiis nam architecto. Aspernatur cupiditate quas. Facere ut dolores. Tempora autem officia. Debitis itaque error. Explicabo distinctio possimus. Ut fugit iure. Temporibus et ipsam. Tenetur consequatur ducimus. Velit odit illo. Ea sapiente quis. Impedit cumque ullam. Et vitae porro. Voluptas voluptatem eligendi. Non error cum."], ["email", "margitlueilwitz@purdypollich.info"], ["age", 25], ["city_id", 15], ["created_at", "2019-02-04 23:53:29.087066"], ["updated_at", "2019-02-04 23:53:29.087066"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mGossip Create (0.2ms)[0m  [1m[32mINSERT INTO "gossips" ("title", "content", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["title", "Street Level"], ["content", "He once won the world series of poker using UNO cards"], ["user_id", 10], ["created_at", "2019-02-04 23:53:29.088462"], ["updated_at", "2019-02-04 23:53:29.088462"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mComment Create (0.2ms)[0m  [1m[32mINSERT INTO "comments" ("content", "user_id", "gossip_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "His sweat is the cure for the common cold"], ["user_id", 9], ["gossip_id", 5], ["created_at", "2019-02-04 23:53:29.089772"], ["updated_at", "2019-02-04 23:53:29.089772"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Runolfssonfurt"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.097392"], ["updated_at", "2019-02-04 23:53:29.097392"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.3ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Rick"], ["last_name", "Reichert"], ["description", "Ab iure sequi. A aperiam ab. Illo qui repellat. Maxime modi quo. Exercitationem dignissimos voluptatum. Fugit expedita tempora. Dolorem eius sint. Omnis modi eos. Non fugit quaerat. Quia porro architecto. Natus ea tempora. Ipsa occaecati similique. Ut quaerat deserunt. Unde voluptas qui. Rem libero eum. Saepe rerum labore. Veritatis in commodi. Deserunt et ad. Eaque est similique. Similique earum in. Odit dicta et. Minus esse culpa. Necessitatibus unde quo. Ullam pariatur veritatis. Quidem exercitationem nulla."], ["email", "murraytrantow@swaniawski.org"], ["age", 25], ["city_id", 16], ["created_at", "2019-02-04 23:53:29.098865"], ["updated_at", "2019-02-04 23:53:29.098865"]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Schmidtmouth"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.102478"], ["updated_at", "2019-02-04 23:53:29.102478"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Santiago"], ["last_name", "McDermott"], ["description", "Qui ex consequatur. Dolor eveniet libero. Numquam cupiditate commodi. Nostrum facere voluptatem. Totam sint quos. Quis distinctio tempore. Cum saepe nihil. Voluptates aut blanditiis. Aut a dolore. Sapiente facere sit. Tenetur ut pariatur. Voluptates laudantium magni. Quasi sint aliquid. Sit aut ut. Reiciendis consequatur aut. Molestias et aspernatur. Voluptatem quis error. Voluptatem dolorem eos. Error qui officia. Aut velit non. Aperiam quos sunt. Et aliquid magni. Inventore necessitatibus sint. Tenetur consequatur deleniti. Cupiditate enim animi."], ["email", "elwanda@ledner.co"], ["age", 25], ["city_id", 17], ["created_at", "2019-02-04 23:53:29.103762"], ["updated_at", "2019-02-04 23:53:29.103762"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mGossip Create (0.1ms)[0m  [1m[32mINSERT INTO "gossips" ("title", "content", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["title", "Major Cake"], ["content", "His lovemaking has been detected by a seismograph"], ["user_id", 12], ["created_at", "2019-02-04 23:53:29.105060"], ["updated_at", "2019-02-04 23:53:29.105060"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mComment Create (0.2ms)[0m  [1m[32mINSERT INTO "comments" ("content", "user_id", "gossip_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "His friends call him by his name, his enemies don’t call him anything because they are all dead"], ["user_id", 11], ["gossip_id", 6], ["created_at", "2019-02-04 23:53:29.106250"], ["updated_at", "2019-02-04 23:53:29.106250"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Valoriechester"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.113701"], ["updated_at", "2019-02-04 23:53:29.113701"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.4ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Jewel"], ["last_name", "Hartmann"], ["description", "Ipsam veniam et. Deleniti voluptates est. Sint repellat ut. Enim dolores et. Sed est ut. Commodi eum numquam. Sit porro exercitationem. Sit ut deleniti. Quia repellat sint. Asperiores dolores aut. Eos quia et. Est consequuntur sunt. Dolores eos earum. Dolor eveniet dolorum. Unde molestiae placeat. Maiores saepe voluptatem. Aut earum et. Debitis numquam eos. Facilis eum rem. Molestias eaque consequatur. Inventore est tempora. Vero iure dolor. Iusto ut quibusdam. Totam fugiat neque. Nihil ullam deserunt."], ["email", "paulinawatsica@grimeskiehn.name"], ["age", 25], ["city_id", 18], ["created_at", "2019-02-04 23:53:29.115199"], ["updated_at", "2019-02-04 23:53:29.115199"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Clemenciatown"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.118976"], ["updated_at", "2019-02-04 23:53:29.118976"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Demetria"], ["last_name", "Heaney"], ["description", "Voluptatem reiciendis ad. Quia et aliquam. Illo voluptate consequuntur. Atque incidunt amet. Voluptates minus est. Expedita vero suscipit. Commodi sequi unde. Est possimus expedita. Rerum iusto voluptate. Velit ullam saepe. Commodi ut minima. Sequi aut quia. Ut ex voluptatum. Iusto aut facere. Omnis in omnis. Corporis ut libero. Veniam consequatur incidunt. Est et incidunt. Distinctio velit tempora. Natus architecto quis. Consequatur aut voluptatem. Ab recusandae maiores. Consectetur ratione aut. Velit perspiciatis quas. Nihil dolor cumque."], ["email", "shelton@kirlinstamm.com"], ["age", 25], ["city_id", 19], ["created_at", "2019-02-04 23:53:29.120345"], ["updated_at", "2019-02-04 23:53:29.120345"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mGossip Create (0.2ms)[0m  [1m[32mINSERT INTO "gossips" ("title", "content", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["title", "Chocolate Choice"], ["content", "His cereal never gets soggy. It sits there, staying crispy, just for him"], ["user_id", 14], ["created_at", "2019-02-04 23:53:29.121801"], ["updated_at", "2019-02-04 23:53:29.121801"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mComment Create (0.2ms)[0m  [1m[32mINSERT INTO "comments" ("content", "user_id", "gossip_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["content", "Time waits on no one, but him"], ["user_id", 13], ["gossip_id", 7], ["created_at", "2019-02-04 23:53:29.123121"], ["updated_at", "2019-02-04 23:53:29.123121"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Fritzmouth"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.132204"], ["updated_at", "2019-02-04 23:53:29.132204"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.3ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Shondra"], ["last_name", "Bahringer"], ["description", "Tempore quia optio. Voluptatem sed iusto. Ut aliquid in. Saepe fuga itaque. Doloribus quasi commodi. Voluptatum eligendi ipsa. Omnis autem unde. Illo fuga consequatur. Ullam dolor eaque. Exercitationem impedit qui. Adipisci ducimus laudantium. Maiores dolor omnis. Nam dolores sit. Animi natus nulla. Voluptatem illum dolorem. Autem qui pariatur. Impedit et et. Vitae eos aut. Architecto veniam aut. Commodi qui pariatur. Iusto id quis. Praesentium consectetur est. Rerum ut repellendus. Enim repudiandae dolorum. Ad consectetur sed."], ["email", "grazynamraz@schmeler.info"], ["age", 25], ["city_id", 20], ["created_at", "2019-02-04 23:53:29.133717"], ["updated_at", "2019-02-04 23:53:29.133717"]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mGossip Create (0.2ms)[0m  [1m[32mINSERT INTO "gossips" ("title", "content", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["title", "Hello Coffee"], ["content", "His blood smells like cologne"], ["user_id", 15], ["created_at", "2019-02-04 23:53:29.135594"], ["updated_at", "2019-02-04 23:53:29.135594"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "New Tovaburgh"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.139434"], ["updated_at", "2019-02-04 23:53:29.139434"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Matha"], ["last_name", "Erdman"], ["description", "Illo sit qui. In maxime perspiciatis. Eos cupiditate ut. Reprehenderit dolor aut. Labore impedit et. Ullam hic mollitia. Dolorem eius maiores. Iste sunt tempore. Et et atque. Soluta sunt unde. Eaque dignissimos nostrum. Cupiditate quidem qui. Magni dolorem qui. A fugiat tempore. Ut laborum officiis. Illo aut assumenda. Quasi magni nesciunt. Placeat dolor tempore. Maiores repellat voluptates. Similique modi esse. Repudiandae ex in. Aut facere et. Rerum nesciunt soluta. Non voluptatem labore. Ipsa minima quasi."], ["email", "nolan@oharaleuschke.com"], ["age", 25], ["city_id", 21], ["created_at", "2019-02-04 23:53:29.140850"], ["updated_at", "2019-02-04 23:53:29.140850"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Kundefurt"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.148262"], ["updated_at", "2019-02-04 23:53:29.148262"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Jodi"], ["last_name", "Gorczany"], ["description", "Sequi quo quidem. Itaque id eos. Sunt reiciendis natus. Cupiditate eius occaecati. Consequatur ut molestiae. Tempora sunt occaecati. Deleniti aliquam illo. Omnis perspiciatis veniam. Voluptatem et natus. Unde eos minus. Illo deleniti dolorem. Quia iure et. Et doloremque architecto. Nostrum optio id. Id rerum ut. Sunt illum tempore. Inventore quis vel. Ab sit rerum. Laudantium ipsum corrupti. Totam iste laboriosam. Libero reiciendis dolorem. Id rerum iure. Modi in quo. Omnis quaerat culpa. Enim facilis aut."], ["email", "glenprohaska@kilbackbeer.co"], ["age", 25], ["city_id", 22], ["created_at", "2019-02-04 23:53:29.149632"], ["updated_at", "2019-02-04 23:53:29.149632"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mGossip Create (0.2ms)[0m  [1m[32mINSERT INTO "gossips" ("title", "content", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["title", "Winter Treat"], ["content", "Time waits on no one, but him"], ["user_id", 17], ["created_at", "2019-02-04 23:53:29.150986"], ["updated_at", "2019-02-04 23:53:29.150986"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Corwinfurt"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.157792"], ["updated_at", "2019-02-04 23:53:29.157792"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Marth"], ["last_name", "Kub"], ["description", "Vero deserunt illo. Aspernatur sed quas. Ullam nihil error. Quisquam ut inventore. Nisi assumenda minima. Non voluptatem nulla. Quia commodi iste. Molestiae nulla facilis. Explicabo aliquam dolorum. Unde modi exercitationem. Non quisquam ducimus. Id omnis et. Natus qui voluptatem. Aliquid consequuntur neque. Accusantium quos quia. Qui excepturi autem. Deserunt doloribus eum. Quam in sit. Molestiae et harum. Aspernatur non voluptas. Sapiente vero qui. Natus modi eius. Sint voluptatibus doloremque. Ut officiis et. Cum quibusdam voluptatum."], ["email", "wayloncorwin@langworth.net"], ["age", 25], ["city_id", 23], ["created_at", "2019-02-04 23:53:29.159177"], ["updated_at", "2019-02-04 23:53:29.159177"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mGossip Create (0.2ms)[0m  [1m[32mINSERT INTO "gossips" ("title", "content", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["title", "Spilt Been"], ["content", "He has never waited 15 minutes after finishing a meal before returning to the pool"], ["user_id", 18], ["created_at", "2019-02-04 23:53:29.160501"], ["updated_at", "2019-02-04 23:53:29.160501"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Laurenceville"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.168882"], ["updated_at", "2019-02-04 23:53:29.168882"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Juan"], ["last_name", "Ferry"], ["description", "Enim aut iure. Rerum tempora quia. Ut autem earum. Ad enim ea. Molestiae dolore deleniti. Consequatur minima voluptatem. Voluptatibus quas aspernatur. Et beatae dolore. Qui aliquam sit. Dicta voluptate sed. Ut dolorum optio. Ipsam laudantium necessitatibus. Ipsam et ut. Eius quis quas. Quia possimus et. Ut adipisci non. Qui qui dicta. Consectetur labore est. Quos aut suscipit. Non et ea. Rerum accusamus aut. Ut quas distinctio. Sit molestiae in. Inventore eius et. Vel harum aut."], ["email", "carolinakuhn@lehnerheidenreich.name"], ["age", 25], ["city_id", 24], ["created_at", "2019-02-04 23:53:29.170406"], ["updated_at", "2019-02-04 23:53:29.170406"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mGossip Create (0.2ms)[0m  [1m[32mINSERT INTO "gossips" ("title", "content", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["title", "Captain's Equinox"], ["content", "His cereal never gets soggy. It sits there, staying crispy, just for him"], ["user_id", 19], ["created_at", "2019-02-04 23:53:29.171779"], ["updated_at", "2019-02-04 23:53:29.171779"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "South Fredrickaton"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.179621"], ["updated_at", "2019-02-04 23:53:29.179621"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Carl"], ["last_name", "Wisozk"], ["description", "Voluptatem ipsam necessitatibus. Quas est minus. Quis et cumque. Similique totam amet. Vel magnam voluptas. Soluta veritatis non. Nam tempore eum. Ex dolorum a. Delectus non quisquam. Quis ea a. Ut illum mollitia. Et est odit. Ut quia aut. Omnis aliquam incidunt. Ratione eligendi nam. Nemo non odit. Aut qui est. Et in distinctio. Quas ipsa possimus. Recusandae officiis id. Perspiciatis eius qui. Et iusto dolor. Quaerat doloremque quo. Iste saepe deserunt. Ipsum qui sed."], ["email", "yevetterunolfon@moenbraun.co"], ["age", 25], ["city_id", 25], ["created_at", "2019-02-04 23:53:29.181023"], ["updated_at", "2019-02-04 23:53:29.181023"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mGossip Create (0.2ms)[0m  [1m[32mINSERT INTO "gossips" ("title", "content", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["title", "Blacktop Level"], ["content", "When he drives a car off the lot, its price increases in value"], ["user_id", 20], ["created_at", "2019-02-04 23:53:29.182403"], ["updated_at", "2019-02-04 23:53:29.182403"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Graycemouth"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.188616"], ["updated_at", "2019-02-04 23:53:29.188616"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Lang"], ["last_name", "Jones"], ["description", "Et sint dicta. Quam dolorem molestiae. Laboriosam ut voluptate. Fuga error id. Nobis deserunt molestiae. Nesciunt rerum animi. Nesciunt consectetur pariatur. Dicta doloremque cupiditate. Ad nihil delectus. Qui dolores inventore. Quam deleniti alias. Molestiae vitae et. Repellendus officiis qui. Reiciendis sit architecto. Laudantium aut ipsum. Quasi quibusdam id. Corrupti accusantium doloremque. Ullam possimus eos. Ratione consequatur provident. Illum mollitia cumque. Modi rerum voluptas. Voluptas commodi id. Iste consequatur recusandae. Incidunt quisquam earum. Soluta maxime enim."], ["email", "vannafahey@hilpert.co"], ["age", 25], ["city_id", 26], ["created_at", "2019-02-04 23:53:29.189907"], ["updated_at", "2019-02-04 23:53:29.189907"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mGossip Create (0.3ms)[0m  [1m[32mINSERT INTO "gossips" ("title", "content", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["title", "Good-morning Pie"], ["content", "His business card simply says ‘I’ll Call You”"], ["user_id", 21], ["created_at", "2019-02-04 23:53:29.191152"], ["updated_at", "2019-02-04 23:53:29.191152"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Lake Bernardoport"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.197820"], ["updated_at", "2019-02-04 23:53:29.197820"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Shavonda"], ["last_name", "Auer"], ["description", "Exercitationem magnam expedita. Corporis enim dolores. Consequatur magni id. Dolorum earum maxime. Sunt dolores dolores. Maxime est omnis. Vel ducimus vero. Aperiam magni non. Illo repudiandae labore. Et in vel. Dolores dicta dolorem. Vel fuga pariatur. Facere sed dolore. Velit et alias. Aliquid nostrum maiores. Doloremque mollitia quae. Qui beatae voluptatem. Numquam sit accusamus. Sit in ut. Ex non non. Quis voluptatem minima. Laborum suscipit omnis. Reiciendis quis incidunt. Eum voluptatem fugiat. Quia voluptate ut."], ["email", "chasbecker@harvey.net"], ["age", 25], ["city_id", 27], ["created_at", "2019-02-04 23:53:29.199126"], ["updated_at", "2019-02-04 23:53:29.199126"]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mGossip Create (0.2ms)[0m  [1m[32mINSERT INTO "gossips" ("title", "content", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["title", "Dark "], ["content", "Panhandlers give him money"], ["user_id", 22], ["created_at", "2019-02-04 23:53:29.200832"], ["updated_at", "2019-02-04 23:53:29.200832"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Lake Ying"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.207705"], ["updated_at", "2019-02-04 23:53:29.207705"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Raye"], ["last_name", "Moen"], ["description", "Ipsa sit harum. Et enim culpa. Hic impedit quia. Quo quod aut. Voluptatem sit dolores. Iste et ut. Placeat sunt dolores. Sint aliquid qui. Assumenda voluptatibus officiis. Sequi quis culpa. Ut porro aspernatur. Accusantium qui voluptatem. Et quaerat ea. Repellat necessitatibus non. Rerum nihil ab. Quia ullam qui. Numquam totam fugit. Voluptate non sed. Nulla nisi quia. Molestias doloribus totam. Enim aut aut. Molestiae adipisci odit. Ut sed et. Vel vero velit. Cum architecto qui."], ["email", "lukehermann@prosacco.name"], ["age", 25], ["city_id", 28], ["created_at", "2019-02-04 23:53:29.209237"], ["updated_at", "2019-02-04 23:53:29.209237"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mGossip Create (0.2ms)[0m  [1m[32mINSERT INTO "gossips" ("title", "content", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["title", "The Extract"], ["content", "The Holy Grail is looking for him"], ["user_id", 23], ["created_at", "2019-02-04 23:53:29.210557"], ["updated_at", "2019-02-04 23:53:29.210557"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "South Aurore"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.224183"], ["updated_at", "2019-02-04 23:53:29.224183"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Mertie"], ["last_name", "Erdman"], ["description", "Itaque omnis provident. Impedit corrupti est. Nihil dolorem facere. Culpa dolorum voluptatem. Veritatis et aut. Veniam necessitatibus dicta. Sunt et voluptatibus. Natus dolores sit. Rerum vero consectetur. Animi velit modi. Consectetur natus possimus. Quia debitis aut. Aut ipsum temporibus. Doloremque deserunt et. Dignissimos deserunt facere. Quas iure explicabo. Impedit sunt qui. Praesentium rerum tempore. Non id odio. Aut molestiae omnis. Et ipsa tempore. Velit et cumque. Qui veniam accusantium. Praesentium qui iure. Id modi sint."], ["email", "shirlene@osinski.name"], ["age", 25], ["city_id", 29], ["created_at", "2019-02-04 23:53:29.225690"], ["updated_at", "2019-02-04 23:53:29.225690"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mLike Create (0.5ms)[0m  [1m[32mINSERT INTO "likes" ("user_id", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["user_id", 24], ["created_at", "2019-02-04 23:53:29.227467"], ["updated_at", "2019-02-04 23:53:29.227467"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Normahaven"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.231284"], ["updated_at", "2019-02-04 23:53:29.231284"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Victor"], ["last_name", "Stark"], ["description", "Necessitatibus ut sit. In repellat ex. Omnis laborum quidem. Officia sapiente consequatur. Reprehenderit velit eaque. Omnis et aperiam. Voluptate impedit totam. Ea voluptatem sequi. Itaque quasi officiis. Natus harum magni. Consequatur sint expedita. Quis quae harum. Commodi harum nam. Illum quasi aperiam. Aut rerum qui. Blanditiis quia amet. Harum sit sint. Ex ad voluptatibus. Corrupti ut quis. Sit sint at. Neque aut distinctio. Libero consequuntur aut. Assumenda a sed. Quis vero enim. Ratione corporis enim."], ["email", "royprosacco@murphykeeling.info"], ["age", 25], ["city_id", 30], ["created_at", "2019-02-04 23:53:29.232665"], ["updated_at", "2019-02-04 23:53:29.232665"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "New Jerry"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.238955"], ["updated_at", "2019-02-04 23:53:29.238955"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Leone"], ["last_name", "Koch"], ["description", "Et non et. Vel et neque. Laudantium sed aut. Dolor odit non. Et et perspiciatis. Nobis cumque velit. Molestiae possimus est. Voluptatem dicta quo. Possimus quasi officia. Cupiditate non quo. Provident commodi aut. Labore molestias perspiciatis. Voluptatem voluptatum molestiae. Totam eos praesentium. Fugit quibusdam cum. Adipisci pariatur nobis. Perspiciatis aut exercitationem. Totam ab aperiam. Adipisci voluptatem iusto. Et quisquam assumenda. Minima et et. Enim atque magnam. Omnis quia aut. Blanditiis dolorum nesciunt. Natus alias illum."], ["email", "kathyrn@dooleydietrich.co"], ["age", 25], ["city_id", 31], ["created_at", "2019-02-04 23:53:29.240269"], ["updated_at", "2019-02-04 23:53:29.240269"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mLike Create (0.2ms)[0m  [1m[32mINSERT INTO "likes" ("user_id", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["user_id", 26], ["created_at", "2019-02-04 23:53:29.241507"], ["updated_at", "2019-02-04 23:53:29.241507"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "New Cruz"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.247726"], ["updated_at", "2019-02-04 23:53:29.247726"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Queenie"], ["last_name", "King"], ["description", "Consectetur molestias occaecati. Voluptatum sunt quos. Sapiente sed porro. Officiis cumque earum. Totam aut ipsa. Inventore nesciunt totam. Modi nulla accusamus. Vero optio impedit. Beatae facilis nulla. Officia iusto esse. Aut quisquam qui. Maxime deserunt soluta. Laboriosam repellendus quia. Rem libero esse. Totam aut minima. Eaque laboriosam aliquam. Veniam voluptas et. Saepe rerum vitae. Et doloribus omnis. Voluptatem est facere. Qui non aut. Ut dolor molestiae. Officia doloremque corporis. Ipsa perferendis temporibus. Ea necessitatibus quo."], ["email", "alethiarodriguez@zulauf.io"], ["age", 25], ["city_id", 32], ["created_at", "2019-02-04 23:53:29.249081"], ["updated_at", "2019-02-04 23:53:29.249081"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mLike Create (0.2ms)[0m  [1m[32mINSERT INTO "likes" ("user_id", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["user_id", 27], ["created_at", "2019-02-04 23:53:29.250324"], ["updated_at", "2019-02-04 23:53:29.250324"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTag Create (0.4ms)[0m  [1m[32mINSERT INTO "tags" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Winter Enlightenment"], ["created_at", "2019-02-04 23:53:29.279081"], ["updated_at", "2019-02-04 23:53:29.279081"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTag Create (0.2ms)[0m  [1m[32mINSERT INTO "tags" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Express Cake"], ["created_at", "2019-02-04 23:53:29.284304"], ["updated_at", "2019-02-04 23:53:29.284304"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTag Create (0.2ms)[0m  [1m[32mINSERT INTO "tags" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Goodbye Equinox"], ["created_at", "2019-02-04 23:53:29.288936"], ["updated_at", "2019-02-04 23:53:29.288936"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTag Create (0.2ms)[0m  [1m[32mINSERT INTO "tags" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Captain's Choice"], ["created_at", "2019-02-04 23:53:29.294589"], ["updated_at", "2019-02-04 23:53:29.294589"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Fayburgh"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.301623"], ["updated_at", "2019-02-04 23:53:29.301623"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Jonathan"], ["last_name", "Upton"], ["description", "Rerum dolores quidem. Et sequi sit. Quo qui ipsa. Praesentium laboriosam ratione. Autem sed vero. Ea voluptatem molestiae. Voluptatem vel iure. Voluptatem voluptatibus maiores. Dignissimos distinctio doloremque. Perspiciatis tempora omnis. Tenetur consequatur eos. Est exercitationem quia. Quia quo possimus. Corporis non nesciunt. Id aliquid officiis. Dolorum tempora id. Voluptatem quia qui. Aperiam consequatur animi. Velit dolor nihil. Voluptas qui distinctio. Veniam possimus quae. Sunt qui veniam. Laborum in vero. Et quisquam sequi. Praesentium ex qui."], ["email", "sachiko@fay.net"], ["age", 25], ["city_id", 33], ["created_at", "2019-02-04 23:53:29.303161"], ["updated_at", "2019-02-04 23:53:29.303161"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Zulemamouth"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.309895"], ["updated_at", "2019-02-04 23:53:29.309895"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "West Deanne"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.316952"], ["updated_at", "2019-02-04 23:53:29.316952"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Lakendra"], ["last_name", "Quitzon"], ["description", "Ut velit quia. Odio mollitia molestiae. Maxime qui voluptatem. Sapiente qui veniam. Incidunt minima atque. Nostrum occaecati et. Itaque molestiae et. Et deleniti consequatur. Odit dolore labore. Neque veniam ea. Vitae aut autem. Officia odio ratione. Delectus unde possimus. Assumenda libero quae. Sint omnis aspernatur. Commodi libero quia. Aut eius qui. Corporis odit magnam. Voluptate minima voluptas. Libero expedita illo. At esse dolore. Aspernatur qui consequatur. Dicta ratione et. Sint molestiae error. Et sapiente aut."], ["email", "christopher@friesen.org"], ["age", 25], ["city_id", 35], ["created_at", "2019-02-04 23:53:29.318449"], ["updated_at", "2019-02-04 23:53:29.318449"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Andrewton"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.325429"], ["updated_at", "2019-02-04 23:53:29.325429"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Kevin"], ["last_name", "Watsica"], ["description", "Dolores tenetur non. Qui non accusantium. Consequuntur sit quidem. Molestiae eius saepe. Nesciunt perferendis commodi. Quo quod vel. Consectetur perferendis fuga. Sunt vero et. Sapiente aliquam perspiciatis. Aut cum enim. Dicta velit non. Maxime eius quis. Perferendis ipsam enim. Eos assumenda magnam. Autem aspernatur deserunt. At et assumenda. Repellendus quibusdam ut. Sint facilis dolorem. Voluptatem itaque et. Et cum fugiat. Commodi sint exercitationem. Doloribus velit corporis. Ducimus sed quia. Animi hic earum. Natus impedit ad."], ["email", "adolph@nienow.biz"], ["age", 25], ["city_id", 36], ["created_at", "2019-02-04 23:53:29.326880"], ["updated_at", "2019-02-04 23:53:29.326880"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Lowebury"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.334700"], ["updated_at", "2019-02-04 23:53:29.334700"]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Ronny"], ["last_name", "Hauck"], ["description", "Soluta eveniet qui. Qui dolor quasi. Animi sit deserunt. Mollitia corporis sequi. Ex et quia. Neque vitae voluptatem. Nemo et labore. Ullam necessitatibus et. Sunt optio officia. Suscipit itaque laudantium. Est sapiente qui. Qui veniam consequatur. Eos fuga doloremque. Et aut facere. Quod dolorum aspernatur. Voluptatibus tempore accusamus. Et culpa totam. Doloremque ducimus voluptatibus. Autem voluptas inventore. Illum qui laboriosam. Dolores qui modi. Repellendus sunt rerum. Soluta sed est. Nihil labore sequi. Quisquam cumque temporibus."], ["email", "parkerbalistreri@mraz.co"], ["age", 25], ["city_id", 37], ["created_at", "2019-02-04 23:53:29.336413"], ["updated_at", "2019-02-04 23:53:29.336413"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "West Rudyfurt"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.344358"], ["updated_at", "2019-02-04 23:53:29.344358"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Jacinda"], ["last_name", "Torp"], ["description", "Voluptatibus voluptas voluptatem. Sed illum suscipit. Animi sit praesentium. Sunt excepturi qui. Facilis natus sint. Debitis enim doloribus. Commodi qui ut. Accusamus non magnam. Laudantium nisi eum. Eaque qui alias. Natus voluptatem aut. Voluptatem aut qui. Occaecati voluptatem numquam. Labore voluptas quibusdam. Similique distinctio aliquam. Ut iste nostrum. Soluta qui adipisci. Quo nobis quas. Aliquam vero aliquid. Iusto quia aut. Enim ut sapiente. Architecto dolores nobis. Sint incidunt voluptates. Est qui dignissimos. Ratione molestiae tempora."], ["email", "anamariakunde@von.com"], ["age", 25], ["city_id", 38], ["created_at", "2019-02-04 23:53:29.345735"], ["updated_at", "2019-02-04 23:53:29.345735"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "West Deangelohaven"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.353105"], ["updated_at", "2019-02-04 23:53:29.353105"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Lorrine"], ["last_name", "Ernser"], ["description", "Est reiciendis dolorem. Est dolor nihil. Ipsum repellendus ab. Voluptas ut error. Delectus optio omnis. Minima ea voluptatibus. Quos commodi debitis. In deleniti unde. Vitae similique qui. Necessitatibus officiis qui. Tempora quisquam nostrum. Officiis autem recusandae. Qui ut repudiandae. Recusandae enim quibusdam. Dolorum quia est. Mollitia voluptas aut. Aliquid quam ut. Incidunt beatae id. Velit autem laborum. Magni repellat autem. Voluptatem laudantium tenetur. Possimus est in. Consequuntur ex dolor. Dolor ullam eligendi. Ut illo provident."], ["email", "blaine@gutmann.io"], ["age", 25], ["city_id", 39], ["created_at", "2019-02-04 23:53:29.354618"], ["updated_at", "2019-02-04 23:53:29.354618"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT  "users".* FROM "users" ORDER BY "users"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mCity Load (0.3ms)[0m  [1m[34mSELECT  "cities".* FROM "cities" WHERE "cities"."id" = $1 LIMIT $2[0m  [["id", 39], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Mickeyhaven"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.366827"], ["updated_at", "2019-02-04 23:53:29.366827"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.3ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Maxwell"], ["last_name", "Keeling"], ["description", "Officia eos eum. Dolorum nobis ut. Vero et aliquam. Aliquam praesentium sit. Quo rerum ipsum. Rerum laborum autem. Amet tenetur ducimus. Dolores voluptatem et. Neque architecto doloremque. Nemo at est. Perferendis quia deserunt. Autem quas nostrum. Error et ut. Ea asperiores quisquam. Hic culpa occaecati. Vel beatae nihil. Aperiam atque hic. Eos doloremque dignissimos. Molestiae veniam magnam. Eum cum repellendus. Quia voluptatem pariatur. Repellendus ut qui. Molestiae porro aut. Sed at omnis. Quaerat sed laborum."], ["email", "kathy@waters.biz"], ["age", 25], ["city_id", 40], ["created_at", "2019-02-04 23:53:29.368461"], ["updated_at", "2019-02-04 23:53:29.368461"]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Bahringerland"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.376125"], ["updated_at", "2019-02-04 23:53:29.376125"]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Trevor"], ["last_name", "Lakin"], ["description", "Sed hic ea. Voluptatem harum et. Magnam velit quo. Voluptas excepturi id. Deserunt quia nisi. Expedita voluptates qui. Nihil incidunt est. Quia maiores iste. Doloribus rerum consequatur. Aut aut illum. Fugit esse assumenda. Dolorum laborum sit. Consequatur sunt beatae. Necessitatibus ad sed. Eveniet eum ut. Sunt assumenda vero. Alias quae sint. Ex eos eligendi. Qui laudantium reprehenderit. Ratione quod cum. In voluptas exercitationem. Facilis quam corrupti. In eos aut. Animi aut unde. Dolor quod iure."], ["email", "takakodietrich@monahan.org"], ["age", 25], ["city_id", 41], ["created_at", "2019-02-04 23:53:29.377702"], ["updated_at", "2019-02-04 23:53:29.377702"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "South Davidtown"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.385164"], ["updated_at", "2019-02-04 23:53:29.385164"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Ara"], ["last_name", "Rohan"], ["description", "Magni repudiandae enim. Quas reprehenderit et. Enim ut vel. Ea tempora nihil. Hic error nobis. Ex et eos. Reprehenderit consectetur doloremque. Rem incidunt quibusdam. Est quia quis. Adipisci amet vero. Cumque optio debitis. Sit dolores officiis. Eum assumenda voluptatem. Repellat quia maiores. Dignissimos at autem. Minus quo et. Quo et quia. Dolor totam temporibus. Sit qui quos. Cum et est. Earum aut culpa. Blanditiis velit dicta. Quidem quibusdam repellat. Dolores minima voluptatum. Quis qui modi."], ["email", "angelfunk@hermannstreich.com"], ["age", 25], ["city_id", 42], ["created_at", "2019-02-04 23:53:29.386462"], ["updated_at", "2019-02-04 23:53:29.386462"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "New Jonah"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.394103"], ["updated_at", "2019-02-04 23:53:29.394103"]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.3ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Fred"], ["last_name", "Marvin"], ["description", "Nesciunt distinctio veniam. Laboriosam libero enim. Ipsam ut est. Consequatur tenetur voluptate. Voluptas suscipit commodi. Voluptatem nam aut. Officia quaerat et. Natus odio qui. Ea ad et. Provident quos ut. Pariatur rerum rem. Consequatur nam beatae. Vitae quia sit. Quo eum assumenda. Ipsum soluta quasi. Nam dignissimos cumque. Modi quas veniam. Dolorem eum rerum. Ab atque delectus. Enim ullam eligendi. Dolores soluta nisi. Molestiae aut consequatur. Dolores dicta minima. Voluptatem cumque consequatur. Aut cumque exercitationem."], ["email", "avisohara@feil.io"], ["age", 25], ["city_id", 43], ["created_at", "2019-02-04 23:53:29.395677"], ["updated_at", "2019-02-04 23:53:29.395677"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "South Odellstad"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.402327"], ["updated_at", "2019-02-04 23:53:29.402327"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Lilliana"], ["last_name", "Heathcote"], ["description", "Modi qui doloribus. Laborum et quia. Quis totam et. Vel exercitationem aperiam. In eveniet inventore. Neque magnam excepturi. Ipsam excepturi at. Provident ducimus quod. Numquam non quo. Necessitatibus labore non. Tempore et praesentium. Vero officia cum. Quia illo quidem. Facilis magni consequatur. Quia similique accusamus. Et cumque beatae. Nemo dolor perferendis. Et non qui. Et est iusto. Dolores accusantium pariatur. Animi et dolorem. Est nostrum nulla. Laborum asperiores iste. A exercitationem voluptatum. Ut ea est."], ["email", "mckenzie@mclaughlin.co"], ["age", 25], ["city_id", 44], ["created_at", "2019-02-04 23:53:29.403703"], ["updated_at", "2019-02-04 23:53:29.403703"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "North Williams"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.410502"], ["updated_at", "2019-02-04 23:53:29.410502"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Alonso"], ["last_name", "Schiller"], ["description", "Quaerat nesciunt soluta. Ea eligendi occaecati. Quia eos occaecati. Iusto sed corrupti. Eos iusto corporis. Inventore qui quasi. Quidem est aperiam. Minus voluptas in. Unde nesciunt fugiat. Suscipit quis aut. Nihil possimus repellendus. Voluptas maxime aut. Quae necessitatibus qui. Vel qui deleniti. Neque recusandae ullam. Sed excepturi ut. Vel quia qui. Commodi alias quas. Ullam consequuntur dolores. Autem nihil libero. Nulla tenetur pariatur. Ratione beatae molestiae. Quo aut nihil. Ea suscipit assumenda. Hic qui voluptatem."], ["email", "travisortiz@marquardt.net"], ["age", 25], ["city_id", 45], ["created_at", "2019-02-04 23:53:29.411981"], ["updated_at", "2019-02-04 23:53:29.411981"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.3ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "West Bennett"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.418986"], ["updated_at", "2019-02-04 23:53:29.418986"]]
+  [1m[35m (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Casandra"], ["last_name", "Steuber"], ["description", "Perferendis nisi officia. Ut odio aliquam. Sit dolorem veritatis. Sint earum et. Ducimus non autem. Non impedit reprehenderit. Voluptatum et temporibus. Aliquam quia quo. Eum beatae ipsa. Quod et quia. Quis nemo vel. Aliquid labore molestiae. Sed et nisi. Aut commodi molestias. Laborum voluptatibus delectus. Ut sit quo. Autem eum ad. Et ex fugit. Aut quis ullam. Eaque voluptatem recusandae. Hic qui reprehenderit. Rem reprehenderit dolores. Dicta ut sint. Qui nisi nesciunt. Voluptas iste itaque."], ["email", "edgardojones@rice.biz"], ["age", 25], ["city_id", 46], ["created_at", "2019-02-04 23:53:29.420438"], ["updated_at", "2019-02-04 23:53:29.420438"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Hackettside"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.427162"], ["updated_at", "2019-02-04 23:53:29.427162"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Jacques"], ["last_name", "Nikolaus"], ["description", "Mollitia a rerum. Delectus soluta magni. Animi cum enim. Et fugit officia. Dignissimos est quia. Aut architecto laboriosam. Molestiae aspernatur unde. Porro dignissimos vitae. Iusto tempora praesentium. Quod voluptas voluptatibus. Quaerat doloremque aperiam. Repellat ipsa dolorem. Assumenda aut fugit. Quod eum non. Aut natus quae. Ut asperiores quia. Illo distinctio tenetur. Assumenda in quia. Ab consequatur saepe. Dolorem officiis impedit. Dolor earum enim. Optio esse nam. Qui et enim. Sit eum iusto. Voluptas sed et."], ["email", "carter@kub.name"], ["age", 25], ["city_id", 47], ["created_at", "2019-02-04 23:53:29.428524"], ["updated_at", "2019-02-04 23:53:29.428524"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mCity Create (0.2ms)[0m  [1m[32mINSERT INTO "cities" ("name", "zip_code", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "South Felicidad"], ["zip_code", "75005"], ["created_at", "2019-02-04 23:53:29.435150"], ["updated_at", "2019-02-04 23:53:29.435150"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "description", "email", "age", "city_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["first_name", "Nena"], ["last_name", "McGlynn"], ["description", "Tempora fuga beatae. Quia quae quis. Quasi atque maxime. Exercitationem cum illo. Adipisci ut autem. Placeat molestiae a. Sit illum tempora. Quas quidem quis. Consequatur illo eaque. Occaecati in reiciendis. Praesentium placeat ab. Aut voluptates excepturi. Nobis architecto est. Doloribus non veniam. Quo sequi voluptas. Perferendis et debitis. Neque doloremque et. Qui omnis rerum. Qui laudantium quis. Optio ut vero. Velit aut ut. Ullam impedit placeat. Ea voluptatem excepturi. Quaerat beatae quisquam. Nam officiis et."], ["email", "sanford@rowerenner.biz"], ["age", 25], ["city_id", 48], ["created_at", "2019-02-04 23:53:29.436701"], ["updated_at", "2019-02-04 23:53:29.436701"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK[0m
