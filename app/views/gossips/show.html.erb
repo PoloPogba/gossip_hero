@@ -1,0 +1,48 @@
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">Team#Yannick#Momo#Polo</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+      <%= link_to "Home", gossips_path %>
+         
+      </li>
+      <li class="nav-item active">
+        <%= link_to "Team ", team_path %>
+
+      </li>
+      <li class="nav-item active">
+         <%= link_to "Contact", contact_path %>
+      </li>
+
+    </ul>
+  </div>
+</nav>
+<center>
+
+<div class="card">
+  <div class="card-header">
+<br><%=  @id_gossips.title %>
+
+  </div>
+  <div class="card-body">
+    <h5 class="card-title"> <%=  @id_gossips.content %><br></h5>
+    <p class="card-text">  <%=  @id_gossips.created_at %><br></p>
+    <p  class="btn btn btn-primary"><%= link_to "#{@id_gossips.user.first_name}", user_path(@id_gossips.user.id) %> </p>
+  </div>
+</div>
+</center>
+<style>
+
+body { background: -webkit-linear-gradient(left, #25c481, #25b7c4);
+    background: linear-gradient(to right, #25c481, #25b7c4);
+    
+}
+</style>
+       
+      <br>
+  </a>
+        
+
